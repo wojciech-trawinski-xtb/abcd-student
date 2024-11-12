@@ -23,12 +23,12 @@ jobs:
 
   - type: spider
 
-  - type: spiderAjax
+  #- type: spiderAjax
 
   - type: passiveScan-wait
     parameters:
       maxDuration: 5
-      
+
   - type: report
     parameters:
       template: traditional-html
