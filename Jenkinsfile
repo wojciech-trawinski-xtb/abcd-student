@@ -52,10 +52,16 @@ pipeline {
         //         sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/osv_report.json || true' 
         //     }
         // }
-        stage('TruffleHog') {
+        // stage('TruffleHog') {
+        //     steps {
+        //         sh 'mkdir -p results/'
+        //         sh 'trufflehog git file://. --only-verified --json > results/truffle_hog_report.json' 
+        //     }
+        // }
+        stage('Semgrep') {
             steps {
                 sh 'mkdir -p results/'
-                sh 'trufflehog git file://. --only-verified --json > results/truffle_hog_report.json' 
+                sh 'semgrep scan --config auto --json > results/semgrep_report.json' 
             }
         }
     }
@@ -64,7 +70,8 @@ pipeline {
             archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
             // defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'wojciech.trawinski@xtb.com')
             // defectDojoPublisher(artifact: 'results/osv_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'wojciech.trawinski@xtb.com')
-            defectDojoPublisher(artifact: 'results/truffle_hog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog Scan', engagementName: 'wojciech.trawinski@xtb.com')
+            // defectDojoPublisher(artifact: 'results/truffle_hog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog Scan', engagementName: 'wojciech.trawinski@xtb.com')
+            defectDojoPublisher(artifact: 'results/semgrep_report.json', productName: 'Juice Shop', scanType: 'Semgrep JSON Report', engagementName: 'wojciech.trawinski@xtb.com')
         }
     }
 }
